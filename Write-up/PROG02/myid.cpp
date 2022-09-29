@@ -1,10 +1,10 @@
 //MYID
-
 #include <bits/stdc++.h>
+#include <stdio.h>
+#include <vector>
 
 #define pb push_back
 using namespace std;
-string un, p;
 vector<vector<string>> a;
     bool ok = 0;
 
@@ -54,14 +54,17 @@ int main(int argc, char** argv){
     }
 
 //    freopen("output.txt", "w", stdout);
+
+    cout << "Nhap ten username: ";
+    string un;
+    cin >> un;
     Setup();
-    cout << "Nhap mat khau cu: ";
-    cin >> p;
-    if(p == GetPass()) {
-        cout << "Xac thuc thanh cong, nhap mat khau moi: ";
-        UpdatePass();
-    } else {
-        cout << "Mat khau khong chinh xac!!!";
+//    cout << un << '\n';
+    for(int i = 0; i < a.size(); ++i) {
+        Check(a[i], un);
+    }
+    if(!ok) {
+        cout << "Khong tim thay username tuong ung.\n";
     }
     return 0;
 }
