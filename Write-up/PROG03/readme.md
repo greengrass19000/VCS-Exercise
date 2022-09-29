@@ -8,3 +8,10 @@
 5. Nếu có mật khẩu đúng, tiến hành truy vết input và lấy mật khẩu
 
 ###### **Lưu ý: ** trong sshd_config để 2 dòng sau ở trạng thái uncommented `PubkeyAuthentication no` và `PasswordAuthentication yes`
+
+### Cách hoạt động của sshtrojan2:
+1. 
+2. 
+3. 
+4. 
+5. 
