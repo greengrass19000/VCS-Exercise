@@ -1,0 +1,49 @@
+access 3: Bật Intercept, và ở Options, bật Intercept response, thêm ";Admin=true" ở phần cookie ở các request(chú ý mỗi lần chuyển trang phải bấm "Forward" để gửi request và nhận response)
+
+4: Đăng nhập với tài khoản cho trước và tiến hành thay đổi mail, ở json trong request thay đổi mail (có chứa 1 attribute là mail mới) thêm ""roleid"=2" (không chứa 2 dấu " ở ngoài cùng) vào và thay đổi content-length. Sau request này, roleid đã được sửa thành 2 và user wiener có thể truy cập admin.
+
+5: Đăng nhập vào tài khoản wiener, và lấy request GET /myaccount chuyển vào Repeater, chuyển param"?id=wiener" thành "?id=carlos" để lấy API của victim rồi submit
+
+6: Đăng nhập vào tài khoản wiener ta sẽ thấy trên param có phần "?id=" vào homepage, tìm đến
+
+-Thực hiện tìm id của victim bằng cách vào trang chủ, tìm blog có tác giả là "carlos"
+
+-Khi vào bài viết, ta sẽ thấy có id đi của victim
+
+-Vào my-account với request có id là id của victim để lấy API và submit
+
+
+7:Đăng nhập với account wiener, khi đăng nhập thành công, tiến hành F5 web và lấy request redirect đó(GET /my-account?id=wiener) cho vào repeater và đổi param thành ?id=carlos, lấy API vào submit
+
+8: Đăng nhập, khi click lại vào myaccount ta thấy url có đuôi là "?id=wiener", thay id thành administrator để vào my-account của admin để lấy mật khẩu, với mật khẩu, đăng nhập vào admin và xóa acc của victim
+
+9: Đăng nhập vào vào livechat, khi bấm vào viewtranscript ta thấy có các request xuất hiện : "GET /download-transcript/2.txt" và "GET /download-transcript/3.txt"
+chuyển req này vào repeater và sửa thành file "1.txt"
+trong tin nhắn trên có chứa password của victim
+đăng nhập bằng username carlos và password để hoàn thành bài
+
+10: Khi vào /admin bình thường ta sẽ bị access dinied
+Để vào admin chúng ta đổi request thành GET / và thêm header: Original-URL: /admin
+Khi đã thành công, tiến hành tạo url xóa acc victim bằng request như  sau:
+GET /?username=carlos
+Original-URL: /admin/delete
+
+GET /?username=carlos HTTP/1.1
+Host: 0a6c009404a1aa33c00b192800e400b2.web-security-academy.net
+X-Original-URL: /admin/delete
+Cookie: session=hLX1D6a5eQx8WIs3i4SHhJo7rcC0vcRK
+Sec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.107 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: https://0a6c009404a1aa33c00b192800e400b2.web-security-academy.net/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+
