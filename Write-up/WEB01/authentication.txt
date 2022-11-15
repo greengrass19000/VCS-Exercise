@@ -1,0 +1,24 @@
+1: Bật Proxy bật Intercept
+- Vào web đăng nhập(ấn forward ở Intercept) ở BurpSuite để lấy method login
+- Forward nó đến Intruder, Bấm "Add" để thêm ký tự Bruteforce Username, password có thể để tùy ý
+- Bấm vào Payload và chọn danh sách username đã được cấp sẵn
+- Ở result sẽ có một respone có length khác các res khác, đó chính là res của req có username hợp lệ
+- Chọn username là username vừa tìm được và chuyển kí tự sang password để bruteforce
+- Làm tương tự như các BF username sẽ có một res status302 chính là phiên đăng nhập thành công
+"username=arlington&password=pass"
+2: 
+- Vào tài khoản wiener và gửi verification code, code sẽ được gửi
+- Đăng xuất
+- vào tài khoản victim
+- Chuyển sang địa chỉ /my-account
+3:
+- Vào phần đăng nhập, chọn Forgot password
+- Nhập username của mình rồi tiến hành reset mật khẩu
+- Tìm request trong Proxy/ HTTP history của Burpsuite có dạng "POST /forgot-password?temp-forgot-password-token=" chuyển nó đến Repeater
+- Đổi username trong phần payload thành username của victim
+- Trở lại phần đăng nhập, đăng nhập với username của victim và mật khẩu là mật khẩu vừa reset
+4: Giống bài 1, nhưng ở trước khi start attack chọn Option/Grep - Extract rồi bôi đen đoạn tin nhắn trả về bấm Ok rồi mới start attack
+- Username sẽ được tìm thấy ở respond mà Tin nhắn ở trên không có dấu chấm ('.')
+5: Bổ sung thêm ở bài 4 header X-forwarded-for để thay đổi IP đăng nhập, cài đặt mật khẩu có độ dài 100 kí tự và username hợp lệ sẽ có response time trả về cao hơn hẳn số còn lại, từ đó tiến hành BF mật khẩu
+6: (Sử dụng attacktype là pitchfork thay vì sniper) Thay vì BF như bình thường, ở giữa 2 req, chèn thêm 1 req của phiên đăng nhập bằng tài khoản wiener (thay vì có 100req, chúng ta sẽ gửi 200req trong đó 100req được thêm vào là đăng nhập thành công) để hệ thống không để ý tới những lần đăng nhập thất bại
+7: 

