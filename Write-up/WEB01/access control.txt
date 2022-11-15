@@ -1,4 +1,8 @@
-access 3: Bật Intercept, và ở Options, bật Intercept response, thêm ";Admin=true" ở phần cookie ở các request(chú ý mỗi lần chuyển trang phải bấm "Forward" để gửi request và nhận response)
+1: Vào /robots.txt để tìm đường link /administrator-panel, vào đó và xóa TK của victim
+
+2: Khi dùng Ctrl+U để view-sources ta thấy trong đoạn mã js có nhắc đến một đường link và đây chính là địa chỉ của admin-panel, truy cập và xóa TK của victim
+
+3: Bật Intercept, và ở Options, bật Intercept response, thêm ";Admin=true" ở phần cookie ở các request(chú ý mỗi lần chuyển trang phải bấm "Forward" để gửi request và nhận response)
 
 4: Đăng nhập với tài khoản cho trước và tiến hành thay đổi mail, ở json trong request thay đổi mail (có chứa 1 attribute là mail mới) thêm ""roleid"=2" (không chứa 2 dấu " ở ngoài cùng) vào và thay đổi content-length. Sau request này, roleid đã được sửa thành 2 và user wiener có thể truy cập admin.
 
@@ -47,3 +51,10 @@ Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9
 Connection: close
 
+11:Vào tài khoản admin, tiến hành thăng cấp tài khoản carlos, lấy request thăng cấp tài khoản đó và cho vào repeater 
+Tiếp theo, tạo một tab ẩn danh, đăng nhập bằng tài khoản của mình(wiener) và lấy cookie session rồi overwrite session ở request trong repeater
+Ở req trong repeater, thay đổi carlos thành wiener, sau khi bấm send, tài khoản được cấp quyền admin, hoàn thành đích
+
+12: Ở bài này, khi bấm upgrade sẽ có thêm một trang confirm hỏi admin có muốn cấp quyền không, ta lấy request đó(sau khi chọn confirm) rồi làm như câu 11
+
+13:Cũng làm như câu số 11, thay đổi cookie session và đổi username cần upgrade từ carlos sang wiener
