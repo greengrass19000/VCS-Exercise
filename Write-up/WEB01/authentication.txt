@@ -6,19 +6,48 @@
 - Chọn username là username vừa tìm được và chuyển kí tự sang password để bruteforce
 - Làm tương tự như các BF username sẽ có một res status302 chính là phiên đăng nhập thành công
 "username=arlington&password=pass"
+
 2: 
 - Vào tài khoản wiener và gửi verification code, code sẽ được gửi
 - Đăng xuất
 - vào tài khoản victim
 - Chuyển sang địa chỉ /my-account
+
 3:
 - Vào phần đăng nhập, chọn Forgot password
 - Nhập username của mình rồi tiến hành reset mật khẩu
 - Tìm request trong Proxy/ HTTP history của Burpsuite có dạng "POST /forgot-password?temp-forgot-password-token=" chuyển nó đến Repeater
 - Đổi username trong phần payload thành username của victim
 - Trở lại phần đăng nhập, đăng nhập với username của victim và mật khẩu là mật khẩu vừa reset
+
 4: Giống bài 1, nhưng ở trước khi start attack chọn Option/Grep - Extract rồi bôi đen đoạn tin nhắn trả về bấm Ok rồi mới start attack
 - Username sẽ được tìm thấy ở respond mà Tin nhắn ở trên không có dấu chấm ('.')
 5: Bổ sung thêm ở bài 4 header X-forwarded-for để thay đổi IP đăng nhập, cài đặt mật khẩu có độ dài 100 kí tự và username hợp lệ sẽ có response time trả về cao hơn hẳn số còn lại, từ đó tiến hành BF mật khẩu
+
 6: (Sử dụng attacktype là pitchfork thay vì sniper) Thay vì BF như bình thường, ở giữa 2 req, chèn thêm 1 req của phiên đăng nhập bằng tài khoản wiener (thay vì có 100req, chúng ta sẽ gửi 200req trong đó 100req được thêm vào là đăng nhập thành công) để hệ thống không để ý tới những lần đăng nhập thất bại
-7: 
+
+7: Lấy req post /login đã đăng nhập với input bất kỳ, tiến hành chọn attack type clusterbomb và thêm  2 kí tự vào trước sau username và 2 kí tự đặc biệt đứng liền nhau sau password, ở payload 1, chọn list username còn ở list 2 chọn null và number of payload là 5.
+Khi chạy sẽ có một response có length khác với những cái khác, nó là res của req có chứa username đúng, tiếp theo đổi attack type thành sniper và tiến hành BF mật khẩu như bình thường
+
+8: Đăng nhập và xác thực như bình thường với tài khoản wiener
+- Đăng xuất và sử dụng Repeater để gửi Req GET /login2, thay param wiener thành carlos, để hệ thống ghi nhận carlos có một dãy số xác thực
+- Đăng nhập bằng tài khoản, cho req POST /login2 vào Intruder clear kí tự đặc biệt rồi đặt nó vào sau phần mfa-code ví dụ như: mfa-code=§asd§ rồi tiến hành Bruteforce mật khẩu bằng cách setting payload 
+From: 0
+To: 9999
+Step: 1
+Min digit: 4
+Max digit: 4
+Max digit after '.': 0
+rồi attack, tìm req found và trong đó có mã xác thực của TK carlos, tất công hoàn tất
+
+9:Khi đăng nhập với option stay logged in, ta thấy có một cookie stay-logged-in, khi thử decode thì nó có dạng base64("$username:" + MD5(password)). Tiến hành đăng xuất lấy method GET /my-account rồi đưa nó vào Intruder để tấn công vét cạn. Thêm payload position vào sau cookie stay-logged-in, thêm payload list là password còn rule lần lượt là MD5, prefix username, base64encode, khi tìm được status code 200 tức là đã hoàn thành câu này.
+
+10:Xem Solution
+
+11:Thực hiện một phiên lấy lại mật khẩu hợp lệ
+Lấy req POST /forgot-password thêm X-Forwarded-Host header là url của exploit server còn username là carlos
+Sau khi send req trên, trong log của exploit server sẽ nhận về token của victim, lúc này lấy URL reset password hợp lệ và thay phần token bằng token của victim, tiến hành reset password và đăng nhập
+
+12:
+
+12:
