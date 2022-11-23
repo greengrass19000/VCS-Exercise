@@ -1,0 +1,5 @@
+1: Chọn 1 sản phẩm và xem số lượng, chỉnh param ở hàm post xem số lượng thành storeID=1|whoami
+
+2: Thêm vào sau email : ||ping+-c+10+127.0.0.1||
+
+3:
