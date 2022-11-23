@@ -48,6 +48,6 @@ rồi attack, tìm req found và trong đó có mã xác thực của TK carlos,
 Lấy req POST /forgot-password thêm X-Forwarded-Host header là url của exploit server còn username là carlos
 Sau khi send req trên, trong log của exploit server sẽ nhận về token của victim, lúc này lấy URL reset password hợp lệ và thay phần token bằng token của victim, tiến hành reset password và đăng nhập
 
-12:
+12:Ta đăng nhập và thử đội MK của wiẻner, khi đổi mật khẩu, sẽ có các trường hợp sau: mật khẩu hiện tại không chính xác, mật khẩu xác thực không đúng và đổi mật khẩu thành công. Để thử MK ta sẽ để mật khẩu nhập lại khác mật khẩu mới, tiến hành BF và tìm về res nào có ghi "New password doesn't match". Sau khi tìm được, tiến hành đổi mật khẩu và hoàn thành bài.
 
-12:
+12: Xem solution

