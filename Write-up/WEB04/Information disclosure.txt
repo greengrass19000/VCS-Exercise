@@ -1,0 +1,12 @@
+1: Vào một sản phẩm và đổi productID trong param thành một xâu ngẫu nhiên, lấy version và submit
+
+2:View-source ta thấy có một tag html được comment có innerHTML là Debug, vào theo path này và để vào php info và tìm secret_key
+
+3:Vào /robots.txt ta thấy có một path là /backup, vào theo path này sẽ thấy key.
+
+4: Chọn Proxy/Options ở phần match and replace bấm Add, để nguyên là "Request header" và một dòng match trống, còn ở dòng replace ta thêm:
+X-Custom-IP-Authorization: 127.0.0.1, sau đó tải lại /admin sẽ thành công.
+
+5: Ta kiểm tra thấy path /.git, tiến hành download về bằng lệnh:   wget -r [Địa chỉ trang]/.git
+Sau đó,ta đi tới thư mục chứa nội dung download và dùng lệnh Git:  git log -p -- ./
+Lệnh này sẽ đưa ra các phiên bản và trong đây chứa password của admin
