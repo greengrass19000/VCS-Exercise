@@ -1,4 +1,3 @@
-$Qp*K5g96ip=?@3YgH8+3rc}gD7d-!E5
 APPRENTICE 1: Chuyển category thành "' OR 1=1 --" 
 
 APPRENTICE 2: Đăng nhập với TK và MK là : "administrator'--"
