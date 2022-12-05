@@ -1,0 +1,9 @@
+1: Khi đưa hàng vào (PORT /cart) ta thấy ở  req body có param "price", chuyển nó vào repeater và đổi giá trị thành 1. Sau đó ở res, chuột phải chọn, show res in browser, rồi thanh toán hóa đơn.
+
+2: Ở request POST /cart, ta thấy có thể truyền vào số lượng hàng(quantaty) âm, vì vậy ta chỉ cần chọn mặt hàng với giá x và số lượng y sao cho 0 < 1337 - x * y < 100, điều này khá đơn giản, và ta sẽ chọn id của sản phẩm x, với quantity -1. Đặt thêm vào cart chiếc áo giá 1337 và thanh toán.
+
+3: Tạo tài khoản với email  của exploit-server: @exploit-0a2300b703d3ca46c0de871d016600ba.exploit-server.net. Vào exploit-server để xác thực tài khoản rồi sau đó đăng nhập vào. Tại đây ta tiến hành đổi email thành WannaCry và truy cập Admin Panel rồi xóa user
+
+4: Đầu tiên ta sẽ thấy 1 mã giảm giá : NEWCUST5 giúp giảm $5, nhưng khi kéo xuống dưới, khi đăng kí xong sẽ có một mã giảm giá SIGNUP30 (giảm giá 30%), thử mua hàng rồi chọn mã giảm giá, ta thấy nếu thêm mã NEWCUST5 > NEWCUST5 thì sẽ báo nó đã được sử dụng, tương tự với SIGNUP30 > SIGNUP30. Nhưng khi ta cho 2 mã này xen kẽ nhau, NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 .... thì mã sẽ được áp dụng lại nhiều lần và giảm bất cứ hóa đơn nào xuống $0, đặt áo và sử dụng cách trên rồi thanh toán.
+
+5: 
