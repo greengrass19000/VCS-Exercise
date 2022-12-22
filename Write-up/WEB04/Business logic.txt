@@ -6,4 +6,21 @@
 
 4: Đầu tiên ta sẽ thấy 1 mã giảm giá : NEWCUST5 giúp giảm $5, nhưng khi kéo xuống dưới, khi đăng kí xong sẽ có một mã giảm giá SIGNUP30 (giảm giá 30%), thử mua hàng rồi chọn mã giảm giá, ta thấy nếu thêm mã NEWCUST5 > NEWCUST5 thì sẽ báo nó đã được sử dụng, tương tự với SIGNUP30 > SIGNUP30. Nhưng khi ta cho 2 mã này xen kẽ nhau, NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 > NEWCUST5 > SIGNUP30 .... thì mã sẽ được áp dụng lại nhiều lần và giảm bất cứ hóa đơn nào xuống $0, đặt áo và sử dụng cách trên rồi thanh toán.
 
-5: 
+5: Dựa vào gợi ý, ta đoán rằng sẽ gửi cho hóa đơn thật nhiều tiền để nó biến thành con số âm.
+Vào đơn hàng $1337 đặt với số lượng là 99, sau đó lấy req này cho vào intruder, tại intruder, xóa payload position và ở lựa chọn payload chọn Null payloads, Continue infinitely. 
+Tiền sẽ tăng lên rồi thành số âm do giới hạn bộ nhớ, sau đó khi nó tăng dần lại, ta tính toán sao cho nó sẽ tăng lên thành một số x mà 0 < x <= 100. Sau đó bấm thanh toán để mua
+
+6: Email chỉ được chứa 255 kí tự, ta sẽ chọn email là gồm : 
+x + @dontwannacry.com (xâu này gồm 255 ký tự)
+sau đó nối thêm vào địa chỉ exploit sever như vậy sau khi đăng ký như bình thường ta sẽ có email là x@dontwannacry.com và được quyền truy cập admin.
+
+7: Đăng nhập vào tài khoản wiener và thay đổi mật khẩu, ở req POST ta thấy khi bỏ đi param current-password vẫn có thể thay đổi mật khẩu. Chuyển username thay đổi thành administrator và xóa param current-password trong req post để đổi mk.
+
+8: vào shop và đặt một món hàng có thể mua được để lấy check-out a sẽ nhận được một url như sau :
+https://0a05006c043968f7c26bbbc700c500e8.web-security-academy.net/cart/order-confirmation?order-confirmed=true. Ở một page khác, đặt áo $1337 và trở về trang hiện tại bấm F5. Đơn hàng được hiểu là đã xác thực và đơn hàng $1337 sẽ được coi là thanh toán thành công.
+
+9: bật intercept ở proxy, sau khi đăng nhập, drop get /role-selector và vào /admin để xóa tk carlos
+
+10: Ta thấy có một gift-card giá $10 nhưng có thể mua được nó với giá $7 với phiếu giảm giá. Sau khi mua các gift-card ta cho payload post /gift-card vào intruder để chạy thay vì phải nhập bằng tay, như vậy sau một lần dùng hết số tiền mua với giá 7 đô rồi mua lại ta sẽ có số tiền mới = số tiền cũ * 10 / 7. sau khi thực hiện mua hết gift-card rồi redem các gift-card ta sẽ đạt đến số tiền của thế mua được chiếc áo $1337
+
+

