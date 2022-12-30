@@ -1,0 +1,5 @@
+1: Nhập vào ô search nội dung <script>window.alert('hello')</script> rồi bấm search
+
+2: Nhập nội dung ở câu 1 vào comment và post comment
+
+3:
