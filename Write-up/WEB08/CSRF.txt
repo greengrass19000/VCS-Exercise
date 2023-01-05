@@ -98,5 +98,5 @@ Tại head Response của exploit server ta thêm Header:
 
 Referrer-Policy: unsafe-url 
 
-Bấm Deliver view to victim để hoàn thành bài
+Bấm Deliver view to victim để hoàn thành bàig
 
