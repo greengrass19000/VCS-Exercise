@@ -77,3 +77,5 @@ Connection: close
 
 ta thiết lập list là kí tự tự 0-9, a-z, sau đó ở Resource pool, chọn create new resource pool có maximum concurrent req là 1, chạy từng kí tự của password một đến khi nào thấy request trả về lâu hơn bình thường thì kí tự đó chính là kí tự đúng. Tiến hành làm 20 lần như thế ta thu được passwd của admin.
 
+
+16: Xem solution

