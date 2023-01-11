@@ -57,4 +57,22 @@ Ta để ý thấy nếu "d.type" là "load-channel" thì iframe sẽ lấy src 
 
 Bấm deliver view to victim
 
-4:
+4: DOM-based open redirection
+
+Khi vào một post ta thấy có tag <a> chứa link quay lại trang chủ:
+
+<a href='#' onclick='returnURL' = /url=https?:\/\/.+)/.exec(location); if(returnUrl)location.href = returnUrl[1];else location.href = "/"'>Back to Blog</a>
+
+Nhận thấy có thể điều hướng trang web dựa trên biến url, ta sẽ redirect địa chỉ bằng việc gán giá trị là exploit-server cho url:
+
+
+https://0a090019036a93cfc0cb4f42007c009e.web-security-academy.net/post?postId=1&url=https://exploit-0a8f005b03ab93e2c03c4e390186008b.exploit-server.net/
+
+5: DOM-based cookie manipulation
+
+
+6: Exploiting DOM clobbering to enable XSS
+
+
+7: Clobbering DOM attributes to bypass HTML filters
+
